@@ -26,7 +26,7 @@ export default function WatchForm() {
       form.setFieldsValue({
         ...data,
         purchaseDate: data.purchaseDate ? dayjs(data.purchaseDate) : null,
-        warrantyEnd: data.warrantyEnd ? dayjs(data.warrantyEnd) : null,
+        warrantyExpiry: data.warrantyExpiry ? dayjs(data.warrantyExpiry) : null,
       })
     } catch (err) {
       message.error('获取信息失败')
@@ -41,7 +41,7 @@ export default function WatchForm() {
       const payload = {
         ...values,
         purchaseDate: values.purchaseDate ? dayjs(values.purchaseDate).format('YYYY-MM-DD') : null,
-        warrantyEnd: values.warrantyEnd ? dayjs(values.warrantyEnd).format('YYYY-MM-DD') : null,
+        warrantyExpiry: values.warrantyExpiry ? dayjs(values.warrantyExpiry).format('YYYY-MM-DD') : null,
       }
       if (isEdit) {
         await watchAPI.update(id, payload)
@@ -110,7 +110,7 @@ export default function WatchForm() {
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 
-        <Form.Item label="保修截止日期" name="warrantyEnd">
+        <Form.Item label="保修截止日期" name="warrantyExpiry">
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 

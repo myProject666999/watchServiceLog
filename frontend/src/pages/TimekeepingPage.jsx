@@ -24,7 +24,7 @@ export default function TimekeepingPage() {
       setLoading(true)
       const res = await timekeepingAPI.listByWatch(watchId)
       const data = Array.isArray(res) ? res : res.data || []
-      setRecords(data.sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()))
+      setRecords(data.sort((a, b) => dayjs(b.recordDate).valueOf() - dayjs(a.recordDate).valueOf()))
     } catch (err) {
       message.error('获取走时记录失败')
     } finally {
@@ -36,7 +36,7 @@ export default function TimekeepingPage() {
     try {
       await timekeepingAPI.create({
         watchId: Number(watchId),
-        date: dayjs(values.date).format('YYYY-MM-DD'),
+        recordDate: dayjs(values.date).format('YYYY-MM-DD'),
         deviationSeconds: values.deviationSeconds,
         note: values.note || '',
       })
@@ -59,9 +59,9 @@ export default function TimekeepingPage() {
   }
 
   const chartData = [...records]
-    .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+    .sort((a, b) => dayjs(a.recordDate).valueOf() - dayjs(b.recordDate).valueOf())
     .map((r) => ({
-      date: dayjs(r.date).format('YYYY-MM-DD'),
+      date: dayjs(r.recordDate).format('YYYY-MM-DD'),
       deviation: r.deviationSeconds,
     }))
 
@@ -73,10 +73,10 @@ export default function TimekeepingPage() {
   const columns = [
     {
       title: '日期',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'recordDate',
+      key: 'recordDate',
       render: (val) => dayjs(val).format('YYYY-MM-DD'),
-      sorter: (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf(),
+      sorter: (a, b) => dayjs(a.recordDate).valueOf() - dayjs(b.recordDate).valueOf(),
       defaultSortOrder: 'descend',
     },
     {

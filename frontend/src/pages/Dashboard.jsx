@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   const maintenanceAlerts = data?.maintenanceAlerts || []
   const wearingAlerts = data?.wearingAlerts || []
-  const deviationOverview = data?.deviationOverview || []
+  const watchSummaries = data?.watchSummaries || []
 
   const maintenanceColumns = [
     {
@@ -54,22 +54,16 @@ export default function Dashboard() {
       key: 'model',
     },
     {
-      title: '上次保养',
-      dataIndex: 'lastMaintenance',
-      key: 'lastMaintenance',
-      render: (val) => val ? dayjs(val).format('YYYY-MM-DD') : '-',
-    },
-    {
-      title: '已超期(月)',
-      dataIndex: 'overdueMonths',
-      key: 'overdueMonths',
+      title: '提醒信息',
+      dataIndex: 'message',
+      key: 'message',
       render: (val) => <Tag color="red">{val}</Tag>,
     },
     {
       title: '操作',
       key: 'action',
       render: (_, record) => (
-        <a onClick={() => navigate(`/watches/${record.id}/maintenance`)}>去保养</a>
+        <a onClick={() => navigate(`/watches/${record.watchId}/maintenance`)}>去保养</a>
       ),
     },
   ]
@@ -86,22 +80,16 @@ export default function Dashboard() {
       key: 'model',
     },
     {
-      title: '上次佩戴',
-      dataIndex: 'lastWorn',
-      key: 'lastWorn',
-      render: (val) => val ? dayjs(val).format('YYYY-MM-DD') : '-',
-    },
-    {
-      title: '未佩戴天数',
-      dataIndex: 'daysSinceLastWorn',
-      key: 'daysSinceLastWorn',
-      render: (val) => <Tag color="orange">{val} 天</Tag>,
+      title: '提醒信息',
+      dataIndex: 'message',
+      key: 'message',
+      render: (val) => <Tag color="orange">{val}</Tag>,
     },
     {
       title: '操作',
       key: 'action',
       render: (_, record) => (
-        <a onClick={() => navigate(`/watches/${record.id}/wearing`)}>去佩戴</a>
+        <a onClick={() => navigate(`/watches/${record.watchId}/wearing`)}>去佩戴</a>
       ),
     },
   ]
@@ -122,6 +110,7 @@ export default function Dashboard() {
       dataIndex: 'latestDeviation',
       key: 'latestDeviation',
       render: (val) => {
+        if (val == null) return '-'
         const isNormal = val >= -10 && val <= 20
         return isNormal ? (
           <Tag color="green">{val}</Tag>
@@ -131,16 +120,25 @@ export default function Dashboard() {
       },
     },
     {
-      title: '记录日期',
-      dataIndex: 'latestDate',
-      key: 'latestDate',
-      render: (val) => val ? dayjs(val).format('YYYY-MM-DD') : '-',
+      title: '状态',
+      dataIndex: 'deviationStatus',
+      key: 'deviationStatus',
+      render: (val) => {
+        if (val === '正常') return <Tag color="green">正常</Tag>
+        if (val === '无数据') return <Tag color="default">无数据</Tag>
+        return <Tag color="red">{val}</Tag>
+      },
+    },
+    {
+      title: '佩戴天数',
+      dataIndex: 'wearingDays',
+      key: 'wearingDays',
     },
     {
       title: '操作',
       key: 'action',
       render: (_, record) => (
-        <a onClick={() => navigate(`/watches/${record.id}/timekeeping`)}>查看走时</a>
+        <a onClick={() => navigate(`/watches/${record.watchId}/timekeeping`)}>查看走时</a>
       ),
     },
   ]
@@ -194,7 +192,7 @@ export default function Dashboard() {
           <Table
             columns={maintenanceColumns}
             dataSource={maintenanceAlerts}
-            rowKey="id"
+            rowKey="watchId"
             pagination={false}
             size="small"
           />
@@ -216,7 +214,7 @@ export default function Dashboard() {
           <Table
             columns={wearingColumns}
             dataSource={wearingAlerts}
-            rowKey="id"
+            rowKey="watchId"
             pagination={false}
             size="small"
           />
@@ -231,13 +229,13 @@ export default function Dashboard() {
           </span>
         }
       >
-        {deviationOverview.length === 0 ? (
+        {watchSummaries.length === 0 ? (
           <Alert message="暂无走时记录" type="info" showIcon />
         ) : (
           <Table
             columns={deviationColumns}
-            dataSource={deviationOverview}
-            rowKey="id"
+            dataSource={watchSummaries}
+            rowKey="watchId"
             pagination={false}
             size="small"
           />

@@ -27,11 +27,11 @@ export default function WearingPage() {
     }
   }
 
-  const wearingDates = new Set(records.map((r) => dayjs(r.date).format('YYYY-MM-DD')))
+  const wearingDates = new Set(records.map((r) => dayjs(r.wearDate).format('YYYY-MM-DD')))
 
   const toggleWearing = useCallback(async (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD')
-    const existing = records.find((r) => dayjs(r.date).format('YYYY-MM-DD') === dateStr)
+    const existing = records.find((r) => dayjs(r.wearDate).format('YYYY-MM-DD') === dateStr)
 
     try {
       if (existing) {
@@ -40,7 +40,7 @@ export default function WearingPage() {
       } else {
         await wearingAPI.create({
           watchId: Number(watchId),
-          date: dateStr,
+          wearDate: dateStr,
         })
         message.success('标记佩戴')
       }
@@ -56,13 +56,13 @@ export default function WearingPage() {
   const daysInMonth = currentMonth.daysInMonth()
 
   const thisMonthWearingDays = records.filter((r) => {
-    const d = dayjs(r.date)
+    const d = dayjs(r.wearDate)
     return d.isSame(currentMonth, 'month') && d.isSame(currentMonth, 'year')
   }).length
 
   const today = dayjs()
   const sortedDates = records
-    .map((r) => dayjs(r.date))
+    .map((r) => dayjs(r.wearDate))
     .sort((a, b) => b.valueOf() - a.valueOf())
   const lastWornDate = sortedDates[0]
   const daysSinceLastWorn = lastWornDate ? today.diff(lastWornDate, 'day') : null

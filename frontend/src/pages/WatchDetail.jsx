@@ -31,9 +31,9 @@ export default function WatchDetail() {
       ])
       setWatch(watchRes.data || watchRes)
       const records = Array.isArray(tkRes) ? tkRes : tkRes.data || []
-      const sorted = [...records].sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
+      const sorted = [...records].sort((a, b) => dayjs(b.recordDate).valueOf() - dayjs(a.recordDate).valueOf())
       setRecentRecords(sorted.slice(0, 30).map((r) => ({
-        date: dayjs(r.date).format('YYYY-MM-DD'),
+        date: dayjs(r.recordDate).format('YYYY-MM-DD'),
         deviation: r.deviationSeconds,
       })).reverse())
     } catch (err) {
@@ -100,11 +100,11 @@ export default function WatchDetail() {
             {watch.purchaseDate ? dayjs(watch.purchaseDate).format('YYYY-MM-DD') : '-'}
           </Descriptions.Item>
           <Descriptions.Item label="保修截止">
-            {watch.warrantyEnd ? (
-              dayjs(watch.warrantyEnd).isBefore(dayjs(), 'day') ? (
-                <Tag color="red">{dayjs(watch.warrantyEnd).format('YYYY-MM-DD')} (已过期)</Tag>
+            {watch.warrantyExpiry ? (
+              dayjs(watch.warrantyExpiry).isBefore(dayjs(), 'day') ? (
+                <Tag color="red">{dayjs(watch.warrantyExpiry).format('YYYY-MM-DD')} (已过期)</Tag>
               ) : (
-                dayjs(watch.warrantyEnd).format('YYYY-MM-DD')
+                dayjs(watch.warrantyExpiry).format('YYYY-MM-DD')
               )
             ) : '-'}
           </Descriptions.Item>

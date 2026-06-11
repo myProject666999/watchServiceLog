@@ -25,22 +25,22 @@ export const watchAPI = {
 }
 
 export const timekeepingAPI = {
-  listByWatch: (watchId) => api.get(`/watches/${watchId}/timekeeping`),
+  listByWatch: (watchId) => api.get(`/timekeeping/watch/${watchId}`),
   listByWatchRange: (watchId, start, end) =>
-    api.get(`/watches/${watchId}/timekeeping/range`, { params: { start, end } }),
+    api.get(`/timekeeping/watch/${watchId}/range`, { params: { start, end } }),
   create: (data) => api.post('/timekeeping', data),
   delete: (id) => api.delete(`/timekeeping/${id}`),
 }
 
 export const maintenanceAPI = {
-  listByWatch: (watchId) => api.get(`/watches/${watchId}/maintenance`),
+  listByWatch: (watchId) => api.get(`/maintenance/watch/${watchId}`),
   create: (data) => api.post('/maintenance', data),
   update: (id, data) => api.put(`/maintenance/${id}`, data),
   delete: (id) => api.delete(`/maintenance/${id}`),
 }
 
 export const wearingAPI = {
-  listByWatch: (watchId) => api.get(`/watches/${watchId}/wearing`),
+  listByWatch: (watchId) => api.get(`/wearing/watch/${watchId}`),
   create: (data) => api.post('/wearing', data),
   delete: (id) => api.delete(`/wearing/${id}`),
 }

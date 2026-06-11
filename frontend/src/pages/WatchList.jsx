@@ -68,8 +68,8 @@ export default function WatchList() {
     },
     {
       title: '保修截止',
-      dataIndex: 'warrantyEnd',
-      key: 'warrantyEnd',
+      dataIndex: 'warrantyExpiry',
+      key: 'warrantyExpiry',
       render: (val) => {
         if (!val) return '-'
         const isExpired = dayjs(val).isBefore(dayjs(), 'day')

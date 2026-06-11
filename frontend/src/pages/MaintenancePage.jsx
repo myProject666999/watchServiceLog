@@ -44,7 +44,7 @@ export default function MaintenancePage() {
       setLoading(true)
       const res = await maintenanceAPI.listByWatch(watchId)
       const data = Array.isArray(res) ? res : res.data || []
-      setRecords(data.sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()))
+      setRecords(data.sort((a, b) => dayjs(b.maintenanceDate).valueOf() - dayjs(a.maintenanceDate).valueOf()))
     } catch (err) {
       message.error('获取保养记录失败')
     } finally {
@@ -56,9 +56,9 @@ export default function MaintenancePage() {
     try {
       await maintenanceAPI.create({
         watchId: Number(watchId),
-        date: dayjs(values.date).format('YYYY-MM-DD'),
-        type: values.type,
-        provider: values.provider || '',
+        maintenanceDate: dayjs(values.date).format('YYYY-MM-DD'),
+        maintenanceType: values.type,
+        serviceProvider: values.provider || '',
         cost: values.cost || 0,
         note: values.note || '',
       })
@@ -84,31 +84,31 @@ export default function MaintenancePage() {
 
   const typeCostMap = {}
   records.forEach((r) => {
-    const label = typeLabelMap[r.type] || r.type
+    const label = typeLabelMap[r.maintenanceType] || r.maintenanceType
     typeCostMap[label] = (typeCostMap[label] || 0) + (r.cost || 0)
   })
 
   const columns = [
     {
       title: '日期',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'maintenanceDate',
+      key: 'maintenanceDate',
       render: (val) => dayjs(val).format('YYYY-MM-DD'),
-      sorter: (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf(),
+      sorter: (a, b) => dayjs(a.maintenanceDate).valueOf() - dayjs(b.maintenanceDate).valueOf(),
       defaultSortOrder: 'descend',
     },
     {
       title: '类型',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'maintenanceType',
+      key: 'maintenanceType',
       render: (val) => <Tag color="#D4A853">{typeLabelMap[val] || val}</Tag>,
       filters: MAINTENANCE_TYPES.map((t) => ({ text: t.label, value: t.value })),
-      onFilter: (value, record) => record.type === value,
+      onFilter: (value, record) => record.maintenanceType === value,
     },
     {
       title: '服务商',
-      dataIndex: 'provider',
-      key: 'provider',
+      dataIndex: 'serviceProvider',
+      key: 'serviceProvider',
     },
     {
       title: '费用',
